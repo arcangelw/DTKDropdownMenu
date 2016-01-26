@@ -39,7 +39,7 @@
     DTKDropdownItem *item2 = [DTKDropdownItem itemWithTitle:@"dropdownItem2" callBack:^(NSUInteger index, id info) {
         NSLog(@"dropdownItem%lu",(unsigned long)index);
     }];
-    DTKDropdownItem *item3 = [DTKDropdownItem itemWithTitle:@"dropdownItem3" callBack:^(NSUInteger index, id info) {
+    DTKDropdownItem *item3 = [DTKDropdownItem itemWithTitle:@"Item3" callBack:^(NSUInteger index, id info) {
         NSLog(@"dropdownItem%lu",(unsigned long)index);
     }];
     DTKDropdownMenuView *menuView = [DTKDropdownMenuView dropdownMenuViewForNavbarTitleViewWithFrame:CGRectMake(0, 0, 200.f, 44.f) dropdownItems:@[item0,item1,item2,item3]];
@@ -52,6 +52,7 @@
     menuView.textFont = [UIFont systemFontOfSize:14.f];
     menuView.animationDuration = 0.2f;
     menuView.selectedIndex = 3;
+    menuView.cellSeparatorColor = [UIColor greenColor];
     self.navigationItem.titleView = menuView;
     
 }

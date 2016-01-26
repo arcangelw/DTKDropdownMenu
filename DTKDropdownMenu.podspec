@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "DTKDropdownMenu"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "DTKDropdownMenu"
   s.homepage     = "https://github.com/arcangelw/DTKDropdownMenu"
   s.license      = 'MIT'

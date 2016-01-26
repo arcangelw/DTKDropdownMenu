@@ -55,12 +55,9 @@ static const CGFloat DDP_PADDING = 5.f;
 @end
 
 @interface DTKDropdownButton : UIButton
-
 @end
 @implementation DTKDropdownButton
-
 - (void)setHighlighted:(BOOL)highlighted{};
-
 @end
 
 @interface DTKDropdownMenuView()
@@ -115,14 +112,6 @@ UITableViewDataSource
 + (instancetype)dropdownMenuViewForNavbarTitleViewWithFrame:(CGRect )frame dropdownItems:(NSArray *)dropdownItems
 {
     return [DTKDropdownMenuView dropdownMenuViewWithType:dropDownTypeTitle frame:frame dropdownItems:dropdownItems icon:nil];
-}
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        //        [self updateMainConstraints];
-    }
-    return self;
 }
 
 /**
@@ -271,22 +260,28 @@ UITableViewDataSource
     self.wrapperView.hidden = NO;
     self.backgroundView.alpha = 0.0;
     menuWeakSelf(menuWeakSelf)
-    [UIView animateWithDuration:self.animationDuration
+    [UIView animateWithDuration:self.animationDuration * 1.5f
                      animations:^{
                          menuWeakSelf.arrowImageView.transform = CGAffineTransformRotate(menuWeakSelf.arrowImageView.transform, M_PI);
                      }];
-    
     [UIView animateWithDuration:self.animationDuration * 1.5f
                           delay:0
          usingSpringWithDamping:0.7f
           initialSpringVelocity:0.5f
-                        options:UIViewAnimationOptionCurveLinear
+                        options:UIViewAnimationOptionCurveEaseOut|UIViewAnimationOptionLayoutSubviews
                      animations:^{
                          [menuWeakSelf.tableView layoutIfNeeded];
                          [menuWeakSelf.tableView reloadData];
+                         CGRect bound = CGRectMake(0.f, 0.f, menuWeakSelf.dropWidth,DDP_TABLEVIEW_HEIGHT - 1.f );
+                         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:bound byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(6.f, 6.f)];
+                         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+                         maskLayer.frame = bound;
+                         maskLayer.path = maskPath.CGPath;
+                         menuWeakSelf.tableView.layer.mask = maskLayer;
                          menuWeakSelf.backgroundView.alpha = self.backgroundAlpha;
+                     } completion:^(BOOL finished) {
                          menuWeakSelf.titleButton.enabled = YES;
-                     } completion:nil];
+                     }];
 }
 - (void)hideMenu
 {
@@ -301,7 +296,7 @@ UITableViewDataSource
     }];
     self.titleButton.alpha = 1.f;
     menuWeakSelf(menuWeakSelf)
-    [UIView animateWithDuration:self.animationDuration
+    [UIView animateWithDuration:self.animationDuration * 1.5f
                      animations:^{
                          menuWeakSelf.arrowImageView.transform = CGAffineTransformIdentity;
                      }];
@@ -309,7 +304,7 @@ UITableViewDataSource
                           delay:0
          usingSpringWithDamping:0.7f
           initialSpringVelocity:0.5f
-                        options:UIViewAnimationOptionCurveLinear
+                        options:UIViewAnimationOptionCurveEaseOut|UIViewAnimationOptionLayoutSubviews
                      animations:^{
                          [menuWeakSelf.tableView layoutIfNeeded];
                          [menuWeakSelf.tableViewTopArrow layoutIfNeeded];
@@ -455,7 +450,6 @@ UITableViewDataSource
     if (self.dropDownType == dropDownTypeTitle) {
         DTKDropdownItem *item = self.items[_selectedIndex];
         [self.titleButton setTitle:item.title forState:UIControlStateNormal];
-        
         CGFloat titleWidth = [item.title sizeWithAttributes:@{NSFontAttributeName:self.titleFont}].width;
         if (titleWidth > self.frame.size.width) {
             [self.titleButton mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -493,9 +487,11 @@ UITableViewDataSource
         if (_isMenuShow) {
             //展开
             [self showMenu];
+            
         }else{
             //隐藏
             [self hideMenu];
+            
         }
     }
 }
@@ -508,13 +504,14 @@ UITableViewDataSource
     if (!_titleButton)
     {
         _titleButton = [[DTKDropdownButton alloc] init];
-        DTKDropdownItem *item = self.items[0];
-        [_titleButton setTitle:item.title forState:UIControlStateNormal];
+        if (self.items.count) {
+            DTKDropdownItem *item = self.items[0];
+            [_titleButton setTitle:item.title forState:UIControlStateNormal];
+        }
         [_titleButton addTarget:self action:@selector(handleTapOnTitleButton:) forControlEvents:UIControlEventTouchDown];
         [_titleButton.titleLabel setFont:self.titleFont];
         [_titleButton setTitleColor:self.titleColor forState:UIControlStateNormal];
         _titleButton.titleLabel.lineBreakMode =NSLineBreakByTruncatingTail;
-        
         [self addSubview:_titleButton];
     }
     return _titleButton;
@@ -528,6 +525,7 @@ UITableViewDataSource
         _arrowImageView = [[UIImageView alloc] initWithImage:image];
         [self addSubview:_arrowImageView];
         _arrowImageView.userInteractionEnabled = YES;
+        _arrowImageView.hidden = YES;
         [self addArrowTapGesture:_arrowImageView];
     }
     return _arrowImageView;
@@ -555,8 +553,6 @@ UITableViewDataSource
         _tableView.tableFooterView = [[UIView alloc] init];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorColor = self.cellSeparatorColor;
-        [_tableView.layer setMasksToBounds:YES];
-        [_tableView.layer setCornerRadius:6.f];
     }
     
     return _tableView;
@@ -650,6 +646,7 @@ UITableViewDataSource
     }
     return _cellColor;
 }
+//默认title字体 system 17
 - (UIFont *)titleFont
 {
     if (!_titleFont) {
@@ -665,7 +662,7 @@ UITableViewDataSource
     }
     return _titleColor;
 }
-//默认设置80
+//默认设置80.f
 - (CGFloat)dropWidth
 {
     if (_dropWidth < 80.f) {
