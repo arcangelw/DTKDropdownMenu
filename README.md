@@ -1,6 +1,6 @@
 # DTKDropdownMenu
 ###对题库通用下拉菜单
-
+![](https://github.com/arcangelw/DTKDropdownMenu/raw/master/DTKDropdownMenu.gif)
 公司项目中通用下拉菜单集成，参考了[KTDropdownMenuView](https://github.com/tujinqiu/KTDropdownMenuView),在理清思路和需求后完成了DTKDropdownMenu，感谢
 - [@tujinqiu](https://github.com/tujinqiu)
 
