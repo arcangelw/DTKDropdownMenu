@@ -1,14 +1,16 @@
-# DTKDropdownMenu
+DTKDropdownMenu
+===
 ###对题库通用下拉菜单
 ![](https://github.com/arcangelw/DTKDropdownMenu/raw/master/DTKDropdownMenu.gif)
+
 公司项目中通用下拉菜单集成，参考了[KTDropdownMenuView](https://github.com/tujinqiu/KTDropdownMenuView),在理清思路和需求后完成了DTKDropdownMenu，感谢
 - [@tujinqiu](https://github.com/tujinqiu)
 
-#####因为产品需求（你懂的），很多无用点击后续优化处理掉
+######因为产品需求（你懂的），很多无用点击后续优化处理掉，希望可以把这个框架做到通用，有什么问题希望可以和大家一起交流
 
 
 用法
----
+----
 ######支持cocoapods
 DTKDropdownMenu
    pod 'DTKDropdownMenu', '~> 0.0.4'
