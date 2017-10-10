@@ -671,6 +671,13 @@ UITableViewDataSource
     return _dropWidth;
 }
 
+#pragma mark - iOS 11
+
+- (CGSize)intrinsicContentSize
+{
+    return self.frame.size;
+}
+
 @end
 
 @implementation DTKDropdownItem
